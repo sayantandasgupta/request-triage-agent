@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 from pathlib import Path
 
@@ -13,19 +14,26 @@ PROJECT_ROOT = BASE_DIR.parent
 ENV_PATH = PROJECT_ROOT / ".env"
 DOCS_DIR = BASE_DIR / "documents"
 CHROMA_DIR = BASE_DIR / "chroma_db"
+FIRST_SECTION = re.compile(r"^\s*1\.\s", re.MULTILINE)
 
 load_dotenv(ENV_PATH)
+
+
+def strip_header(text: str) -> str:
+    """Return the page text starting from the first numbered section."""
+    match = FIRST_SECTION.search(text)
+    return text[match.start():].lstrip() if match else text
 
 
 def ingest():
     if CHROMA_DIR.exists() and CHROMA_DIR.is_dir():
         shutil.rmtree(CHROMA_DIR)
-    
-    
+
     policy_docs = []
-    
+
     for pdf_path in sorted(DOCS_DIR.glob("*.pdf")):
         data = PyPDFLoader(str(pdf_path)).load()
+        data[0].page_content = strip_header(data[0].page_content)
         for d in data:
             d.metadata["policy_id"] = d.metadata["subject"]
             d.metadata["filename"] = pdf_path.name
@@ -40,13 +48,14 @@ def ingest():
 
     if not os.getenv("OPENAI_API_KEY"):
         raise RuntimeError(f"OPENAI_API_KEY is not set. Add it to {ENV_PATH}")
- 
+
     embedding = OpenAIEmbeddings(model="text-embedding-3-small")
     Chroma.from_documents(
         docs,
         embedding=embedding,
         collection_name="policies",
         persist_directory=str(CHROMA_DIR),
+        collection_metadata={"hnsw:space": "cosine"},
     )
 
 

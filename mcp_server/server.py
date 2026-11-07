@@ -8,12 +8,11 @@ from mcp.server.mcpserver import MCPServer
 BASE_DIR = Path(__file__).resolve().parent
 CHROMA_DIR = BASE_DIR / "chroma_db"
 ENV_PATH = BASE_DIR.parent / ".env"
+SCORE_THRESHOLD = 0.3
 
-# The MCP SDK v2 no longer reads .env files, so we load it ourselves
-# (needed for OPENAI_API_KEY, which OpenAIEmbeddings reads from the environment).
 load_dotenv(ENV_PATH)
 
-mcp = MCPServer("Policy Server")
+mcp = MCPServer("policy-server")
 
 embedding = OpenAIEmbeddings(model="text-embedding-3-small")
 vectorstore = Chroma(
@@ -48,6 +47,7 @@ def search_policy(query: str, k: int = 8) -> dict:
             "score": score,
         }
         for d, score in hits
+        if score >= SCORE_THRESHOLD
     ]
     return {"results": results, "found": len(results) > 0}
 

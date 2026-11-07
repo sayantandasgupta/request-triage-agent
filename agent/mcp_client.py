@@ -1,11 +1,13 @@
-import asyncio
 import json
 import sys
 from pathlib import Path
 
 from mcp import Client, StdioServerParameters
 
-SERVER_PATH = Path(__file__).resolve().parent / "server.py"
+BASE_DIR = Path(__file__).resolve().parent
+ROOT_DIR = BASE_DIR.parent
+SERVER_DIR = ROOT_DIR / "mcp_server"
+SERVER_PATH = SERVER_DIR / "server.py"
 
 
 async def call_mcp_tool(tool_name: str, arguments: dict) -> dict:
@@ -22,12 +24,3 @@ async def call_mcp_tool(tool_name: str, arguments: dict) -> dict:
         if result.structured_content is not None:
             return result.structured_content
         return json.loads(result.content[0].text)
-
-
-if __name__ == "__main__":
-    output = asyncio.run(call_mcp_tool(
-        "search_policy",
-        {"query": "I reported a possible conflict of interest two weeks ago, but I have "
-                  "not received an update. Should I submit a new request?"},
-    ))
-    print(json.dumps(output, indent=2))
