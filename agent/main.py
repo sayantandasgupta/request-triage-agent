@@ -90,11 +90,20 @@ def describe_error(error: BaseException) -> str:
     return str(error) or type(error).__name__
 
 
+def build_search_message(state: TriageState) -> str:
+    """Build the search agent's input from the category, extracted information and request."""
+    return (
+        f"Request category: {state['category']}\n\n"
+        f"Extracted information:\n{state['extracted_info'].model_dump_json(indent=2, exclude_none=True)}\n\n"
+        f"Request:\n{state['request']}"
+    )
+
+
 async def search(state: TriageState) -> TriageState:
     """Search the policy documents through the triage agent."""
     try:
         result = await triage_agent.ainvoke(
-            {"messages": [{"role": "user", "content": state["request"]}]})
+            {"messages": [{"role": "user", "content": build_search_message(state)}]})
         tool_messages = [
             message for message in result["messages"]
             if isinstance(message, ToolMessage) and message.name == "search_policy"

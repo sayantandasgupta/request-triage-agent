@@ -1,0 +1,45 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0 -- /Users/sayantandasgupta/Developer/Personal/request_triage_agent/.venv/bin/python
+rootdir: /Users/sayantandasgupta/Developer/Personal/request_triage_agent
+configfile: pytest.ini
+testpaths: tests
+plugins: platformdirs-4.14.5, langsmith-0.14.17, anyio-4.16.0, asyncio-1.4.1.post1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=session, asyncio_default_test_loop_scope=session
+collecting ... collected 34 items
+
+tests/test_integration.py::test_real_server_finds_relevant_policy PASSED [  2%]
+tests/test_integration.py::test_real_server_returns_controlled_empty_result PASSED [  5%]
+tests/test_integration.py::test_end_to_end_follow_up PASSED              [  8%]
+tests/test_integration.py::test_end_to_end_unsupported_request PASSED    [ 11%]
+tests/test_rules.py::test_check_requirements[new_request-info0-expected0] PASSED [ 14%]
+tests/test_rules.py::test_check_requirements[new_request-info1-expected1] PASSED [ 17%]
+tests/test_rules.py::test_check_requirements[new_request-info2-expected2] PASSED [ 20%]
+tests/test_rules.py::test_check_requirements[existing_case_follow_up-info3-expected3] PASSED [ 23%]
+tests/test_rules.py::test_check_requirements[existing_case_follow_up-info4-expected4] PASSED [ 26%]
+tests/test_rules.py::test_check_requirements[existing_case_follow_up-info5-expected5] PASSED [ 29%]
+tests/test_rules.py::test_check_requirements[policy_guidance-info6-expected6] PASSED [ 32%]
+tests/test_rules.py::test_check_requirements[policy_guidance-info7-expected7] PASSED [ 35%]
+tests/test_rules.py::test_check_requirements_unclear_always_needs_clarification PASSED [ 38%]
+tests/test_rules.py::test_blank_strings_count_as_missing PASSED          [ 41%]
+tests/test_rules.py::test_route_after_check[state0-search] PASSED        [ 44%]
+tests/test_rules.py::test_route_after_check[state1-ask_user] PASSED      [ 47%]
+tests/test_rules.py::test_route_after_check[state2-ask_user] PASSED      [ 50%]
+tests/test_rules.py::test_route_after_check[state3-build_clarification] PASSED [ 52%]
+tests/test_rules.py::test_route_after_check[state4-build_clarification] PASSED [ 55%]
+tests/test_rules.py::test_route_after_search[state0-build_error_response] PASSED [ 58%]
+tests/test_rules.py::test_route_after_search[state1-build_not_covered_response] PASSED [ 61%]
+tests/test_rules.py::test_route_after_search[state2-build_recommendation] PASSED [ 64%]
+tests/test_rules.py::test_search_message_includes_category_and_follow_up_intent PASSED [ 67%]
+tests/test_rules.py::test_describe_error_unwraps_exception_groups PASSED [ 70%]
+tests/test_rules.py::test_recommendation_drops_invented_citations PASSED [ 73%]
+tests/test_rules.py::test_recommendation_keeps_tool_excerpts PASSED      [ 76%]
+tests/test_scenarios.py::test_relevant_policy_retrieval PASSED           [ 79%]
+tests/test_scenarios.py::test_missing_information_asks_user_and_never_searches PASSED [ 82%]
+tests/test_scenarios.py::test_missing_information_continues_after_user_answers PASSED [ 85%]
+tests/test_scenarios.py::test_unclear_request_is_never_searched PASSED   [ 88%]
+tests/test_scenarios.py::test_unsupported_request_returns_not_covered PASSED [ 91%]
+tests/test_scenarios.py::test_unsupported_request_when_excerpts_are_insufficient PASSED [ 94%]
+tests/test_scenarios.py::test_mcp_server_unavailable PASSED              [ 97%]
+tests/test_scenarios.py::test_mcp_tool_returns_error PASSED              [100%]
+
+============================= 34 passed in 30.29s ==============================
